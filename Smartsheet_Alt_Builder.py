@@ -26,13 +26,30 @@ def get_cell_by_column_name(row, column_name):
 # This *example* looks for rows with a "Status" column marked "Complete" and sets the "Remaining" column to zero
 #
 # Return a new Row with updated cell values, else None to leave unchanged
-def evaluate_row_checkbox(source_row, row_name):
+def evaluate_row_checkbox(source_row, col_name):
     # Find the cell and value we want to evaluate
-    status_cell = get_cell_by_column_name(source_row, row_name)
+    status_cell = get_cell_by_column_name(source_row, col_name)
     status_value = status_cell.value
     #print(status_value)
     if status_value == True:
-        return source_row
+        return True
+
+def get_column_value(source_row, col_name):
+    # Find the cell and value we want to evaluate
+    status_cell = get_cell_by_column_name(source_row, col_name)
+    status_value = status_cell.display_value
+    #print(status_value)
+    return status_value
+
+def convert_posix_to_unix_path(posix_path):
+    unix_path = posix_path.replace(":","/")
+    return non_posix_path
+
+
+
+
+
+
 
 """
         remaining_cell = get_cell_by_column_name(source_row, "Remaining")
@@ -73,12 +90,19 @@ wamWorkSheet = smart.Sheets.get_sheet(_wamWorkSheetID)
 for column in wamWorkSheet.columns:
     column_map[column.title] = column.id
 
-rowsToUpdate = []
+rowsToProcess = []
+sourcePathMap = {}
+destPathMap = {}
 
 for row in wamWorkSheet.rows:
-    rowToUpdate = evaluate_row_and_build_updates(row)
-    if rowToUpdate is not None:
-        rowsToUpdate.append(rowToUpdate)
+    rowToProcess = evaluate_row_checkbox(row, "Ready_for_Automation")
+    if rowToProcess is not None:
+        rowsToProcess.append(rowToProcess)
+        sourcePathMap[row] = get_column_value(row, "Donor_Path")
+        destPathMap[row] = get_column_value(row, "Destination_Path")
+
+if rowsToProcess
+
 
 print(rowsToUpdate)
 
